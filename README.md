@@ -10,7 +10,7 @@
      rm -rf aws
      rm awscliv2.zip
      ```
-   * Install the AWS CLI：
+   * Download the Boreas-Objects-V1 dataset：
      ```
      aws s3 sync s3://boreas/boreas-objects-v1 /data_1TB_2/boreas/boreas-objects-v1 --no-sign-reques
      ```
