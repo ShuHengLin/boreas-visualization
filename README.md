@@ -14,6 +14,7 @@
      ```
      aws s3 sync s3://boreas/boreas-objects-v1 /data_1TB_2/boreas/boreas-objects-v1 --no-sign-reques
      ```
+2) Clone and install the [pyboreas](https://github.com/utiasASRL/pyboreas) repository.
 
 ## Video
 [![](https://img.youtube.com/vi/fXD2hjp8eNg/0.jpg)](https://youtu.be/fXD2hjp8eNg)
