@@ -25,6 +25,7 @@ for seq_i in range(num_split):
     # loading image
     camera_frame = seq.get_camera(i)
     img = camera_frame.img
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # loading label
     boxes = camera_frame.get_bounding_boxes(seq.labelFiles, seq.labelTimes, seq.labelPoses)
