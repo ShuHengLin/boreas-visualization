@@ -5,10 +5,15 @@
    * Install the AWS CLI：
      ```
      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+     ```
+     ```
      unzip awscliv2.zip
+     ```
+     ```
      sudo ./aws/install
-     rm -rf aws
-     rm awscliv2.zip
+     ```
+     ```
+     rm -rf aws && rm awscliv2.zip
      ```
    * Download the Boreas-Objects-V1 dataset：
      ```
@@ -16,37 +21,44 @@
      ```
 2) Clone and install the [pyboreas](https://github.com/utiasASRL/pyboreas) repository.
 
+
 ## Visualize lidar pointcloud
 * Using rviz to visualize:
 ```
 roscore
+```
+```
 rosrun rviz rviz -d rviz_config.rviz
 ```
-
 ```
 python -B vis_lidar.py
 ```
+
 
 ## Visualize camera image
 ```
 python -B vis_camera.py
 ```
 
+
 ## Visualize radar image
 ```
 python -B vis_radar.py
 ```
 
+
 ## Visualize all
 * Using rviz to visualize:
 ```
 roscore
+```
+```
 rosrun rviz rviz -d rviz_config.rviz
 ```
-
 ```
 python -B vis_all.py
 ```
+
 
 ## Video
 [![](https://img.youtube.com/vi/fXD2hjp8eNg/0.jpg)](https://youtu.be/fXD2hjp8eNg)
