@@ -30,13 +30,14 @@ for seq_i in range(num_split):
     # loading radar
     radar_frame = seq.get_radar(i)
     radar_img = radar_frame.polar_to_cart(resolution, width)
+    radar_img = (radar_img * 255.0).astype(np.uint8)
     radar_img = cv2.addWeighted(radar_img, 1, radar_img, 1, 0)  # use to enhance the brightness
     radar_img = cv2.cvtColor(radar_img, cv2.COLOR_GRAY2RGB)
 
     # loading label
     boxes = radar_frame.get_bounding_boxes(seq.labelFiles, seq.labelTimes, seq.labelPoses)
-    bounds = [-75, 75, -75, 75, -5, 10] # xmin, xmax, ymin, ymax, zmin, zmax
-    boxes.passthrough(bounds)
+#    bounds = [-75, 75, -75, 75, -5, 10] # xmin, xmax, ymin, ymax, zmin, zmax
+#    boxes.passthrough(bounds)
     boxes.transform(T_bev_metric)
     for box in boxes.bbs:
       draw_box_2d(radar_img, box.pc.points.T.astype(int), box.label)
