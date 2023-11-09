@@ -7,7 +7,7 @@ from pyboreas.data.splits import obj_train
 
 import std_msgs.msg
 import sensor_msgs.point_cloud2 as pcl2
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import PointCloud2, PointField
 
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
@@ -21,10 +21,20 @@ else:
 
 # ==================================================================================================================
 
+header = std_msgs.msg.Header()
+header.frame_id = 'map'
+
+fields = [PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
+          PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
+          PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1),
+          PointField(name='intensity', offset=12, datatype=PointField.FLOAT32, count=1)]
+
 pointcloud_pub = rospy.Publisher('/pointcloud',   PointCloud2, queue_size=10)
 marker_pub     = rospy.Publisher('/detect_box3d', MarkerArray, queue_size=10)
 rospy.init_node('talker', anonymous=True)
 rate = rospy.Rate(1000)
+
+# ==================================================================================================================
 
 for seq_i in range(num_split):
 
@@ -40,13 +50,9 @@ for seq_i in range(num_split):
     if rospy.is_shutdown():
       break
 
-    header = std_msgs.msg.Header()
-    header.stamp = rospy.Time.now()
-    header.frame_id = 'map'
-
     # loading pointcloud
     lidar_frame = seq.get_lidar(i)
-    pointcloud_msg = pcl2.create_cloud_xyz32(header, lidar_frame.points[:, 0:3])
+    pointcloud_msg = pcl2.create_cloud(header, fields, lidar_frame.points[:, 0:4])
     pointcloud_pub.publish(pointcloud_msg)
 
     # loading label
