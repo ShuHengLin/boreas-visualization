@@ -1,9 +1,10 @@
 import rospy
 import numpy as np
 from tqdm import tqdm
-from lib.utils_pointcloud import new_marker_array, box_to_marker
+from lib.utils_pointcloud import *
+
 from pyboreas import BoreasDataset
-from pyboreas.data.splits import obj_train
+from pyboreas.data.splits import obj_train, obj_test
 
 import std_msgs.msg
 import sensor_msgs.point_cloud2 as pcl2
@@ -42,9 +43,7 @@ for seq_i in range(num_split):
     break
 
   seq = bd.sequences[seq_i]
-  seq.filter_frames_gt()
-  seq.synchronize_frames('lidar')
-
+#  seq.filter_frames_gt()
   for i in tqdm(range(0, len(seq.lidar_frames))):
 
     if rospy.is_shutdown():
@@ -58,11 +57,11 @@ for seq_i in range(num_split):
     # loading label
     marker_array = new_marker_array()
     boxes = lidar_frame.get_bounding_boxes()
-    for j, box in enumerate(boxes.bbs):
-      marker = box_to_marker(box.pc.points, cls=box.label, index=j)
-      marker_array.markers.append(marker)
-    marker_pub.publish(marker_array)
+    if boxes is not None:
+      for j, box in enumerate(boxes.bbs):
+        marker = box_to_marker(box.pc.points, cls=box.label, index=j)
+        marker_array.markers.append(marker)
+      marker_pub.publish(marker_array)
 
     lidar_frame.unload_data()
     rate.sleep()
-

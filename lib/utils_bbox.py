@@ -3,6 +3,14 @@ import numpy as np
 
 # ==================================================================================================================
 
+def jpg_compress(img, quality):
+
+  encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
+  result, encimg = cv2.imencode('.jpg', img, encode_param)
+
+  return cv2.imdecode(encimg, 1)
+
+
 def color_select(cls):
 
     if cls == 'Car':
@@ -28,7 +36,7 @@ def color_select(cls):
 # ==================================================================================================================
 
 def is_invalid_bbox(x1, y1, x2, y2, width=2448, height=2048):
-  across_center_line = (x1 > 1224 and x2 < 1224) or (x1 < 1224 and x2 > 1224)
+  across_center_line = (x1 > width / 2 and x2 < width / 2) or (x1 < width / 2 and x2 > width / 2)
   out_of_img = (x1 < 0) or (x1 > width)  or (x2 < 0) or (x2 > width) or \
                (y1 < 0) or (y1 > height) or (y2 < 0) or (y2 > height) 
   return (across_center_line and out_of_img)

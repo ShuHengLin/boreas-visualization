@@ -1,9 +1,12 @@
 import rospy
 import numpy as np
+from lib.Point_utils import Pointcloud
 
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
+
+from pyboreas.utils.utils import get_inverse_tf
 
 # ==================================================================================================================
 
@@ -84,3 +87,25 @@ def box_to_marker(ob, cls, index):
 
   return marker
 
+# ==================================================================================================================
+
+def get_image_filter(camera_frame, lidar_frame, calib):
+
+  # Get the transform from lidar to camera:
+  T_enu_camera = camera_frame.pose
+  T_enu_lidar  = lidar_frame.pose
+  T_camera_lidar = np.matmul(get_inverse_tf(T_enu_camera), T_enu_lidar)
+  lidar_frame.transform(T_camera_lidar)
+
+  # Project to image frame
+  im_size = [2448, 2048]
+  point_in_im, _, _ = lidar_frame.project_onto_image(calib, checkdims=False)
+  point_in_im = point_in_im.squeeze()
+
+  # Filter based on the given image size
+  image_filter = (point_in_im[:, 0] > 0) & \
+                 (point_in_im[:, 0] < im_size[0]) & \
+                 (point_in_im[:, 1] > 0) & \
+                 (point_in_im[:, 1] < im_size[1])
+
+  return image_filter
